@@ -9,3 +9,50 @@ html, body, #app {
 .page {
   background-color: @background-color-sys;
 }
+
+* {
+  box-sizing: border-box;
+}
+
+a {
+  color: @color-darkblue;
+  text-decoration: none;
+  &:active {
+    opacity: .45;
+  }
+  &.disabled {
+    pointer-events: none;
+    color: #999;
+  }
+}
+
+.bg--red {
+  background-color: @color-red;
+}
+.bg--orange {
+  background-color: @color-orange;
+}
+.bg--yellow {
+  background-color: @color-yellow;
+}
+.bg--green {
+  background-color: @color-green;
+}
+.bg--blue {
+  background-color: @color-blue;
+}
+.bg--darkblue {
+  background-color: @color-darkblue;
+}
+.bg--pink {
+  background-color: @color-pink;
+}
+.bg--purple {
+  background-color: @color-purple;
+}
+.bg--brown {
+  background-color: @color-brown;
+}
+.bg--darkgray {
+  background-color: @color-darkgray;
+}

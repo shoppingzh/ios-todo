@@ -1,100 +1,196 @@
 <template>
   <div class="page">
-    <div class="category">
-      <div
-        v-for="category in categories"
-        :key="category.name"
-        class="category__item">
-        <div class="category__item__icon" :class="'category__item__icon--' + category.color">
-          <i :class="'icon-' + category.icon"></i>
+
+    <header class="top-bar">
+      <a href="javascript:;">编辑</a>
+    </header>
+
+    <main>
+      <search-input />
+
+      <div class="todo-card-list">
+        <div class="todo-card-wrap">
+          <todo-card title="今天" color="blue" icon="rili"/>
         </div>
-        <div class="category__item__inner">
-          <div class="category__item__name">{{ category.name }}</div>
-          <div class="category__item__count">0</div>
-          <div class="category__item__route"></div>
+        <div class="todo-card-wrap">
+          <todo-card title="计划" color="orange" icon="shijian"/>
+        </div>
+        <div class="todo-card-wrap">
+          <todo-card title="全部" color="darkgray" icon="konghezi"/>
+        </div>
+        <div class="todo-card-wrap">
+          <todo-card title="旗标" color="red" icon="qizhi"/>
         </div>
       </div>
-    </div>
+
+      <div class="heading">我的列表</div>
+      <div class="category-list">
+        <router-link :to="'/todo'" tag="div">
+          <div
+            v-for="category in categories"
+            :key="category.name"
+            class="category__item"
+            @click="handleCategoryClick">
+            <div class="category__item__icon" :class="'bg--' + category.color">
+              <i :class="'icon-' + category.icon"></i>
+            </div>
+            <div class="category__item__inner">
+              <div class="category__item__name">{{ category.name }}</div>
+              <!-- <div class="category__item__count">0</div>
+              <div class="category__item__route"></div> -->
+            </div>
+          </div>
+        </router-link>
+      </div>
+    </main>
+
+    <footer class="foot-bar">
+      <a href="javascript:;" @click="handleAddCategory">添加列表</a>
+    </footer>
+
+    <md-popup
+      v-model="adding"
+      has-mask
+      position="bottom">
+      <add-category
+        @cancel="adding = false"
+        @done="handleAddDone"
+      />
+    </md-popup>
+
   </div>
 </template>
 
 <script>
+import TodoCard from './TodoCard'
+import SearchInput from '@/components/SearchInput'
+import AddCategory from './AddCategory'
+import * as api from '@/api/category'
+
 export default {
+  components: {
+    TodoCard,
+    SearchInput,
+    AddCategory
+  },
   data() {
     return {
-      categories: [{
-        icon: 'list',
-        color: 'red',
-        name: '提醒'
-      }, {
-        icon: '',
-        color: '',
-        name: '工作'
-      }]
+      categories: [],
+      adding: false
+    }
+  },
+  mounted() {
+    this.loadAll()
+  },
+  methods: {
+    loadAll() {
+      this.categories = api.listAll()
+    },
+    handleAddCategory() {
+      this.adding = true
+    },
+    handleCategoryClick() {
+      
+    },
+    handleAddDone() {
+      this.adding = false
+      this.loadAll()
     }
   }
 }
 </script>
 
 <style lang="less" scoped>
+  @import '@/styles/var.less';
   .page {
     padding: 12px;
   }
-  .category {
+  main {
+    margin: 30px 0;
+  }
+  // 顶部/底部栏
+  .top-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 12px;
+    text-align: right;
+  }
+  .foot-bar {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    padding: 12px;
+  }
+  .heading {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    padding: 5px;
+  }
+  // 搜索
+  .search-input {
+    margin: 25px 0;
+  }
+  // 卡片
+  .todo-card-list {
+    margin-bottom: 15px;
+    .todo-card-wrap {
+      float: left;
+      width: 50%;
+      padding: 5px;
+      margin-bottom: 5px;
+    }
+    &:after {
+      content: '';
+      display: table;
+      clear: both;
+      visibility: hidden;
+      width: 0;
+      height: 0;
+    }
+  }
+  // 分类
+  .category-list {
     background-color: #fff;
     border-radius: 10px;
+  }
+  .category {
     &__item {
+      display: flex;
+      align-items: center;
       padding: 8px;
+
+      &:active {
+        background-color: #eee;
+      }
+
       &__icon {
-        width: 20px;
-        height: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 32px;
+        height: 32px;
         overflow: hidden;
         float: left;
         padding: 5px;
         border-radius: 50%;
-        &--red {
-          background-color: @color-red;
-        }
-        &--orange {
-          background-color: @color-orange;
-        }
-        &--yellow {
-          background-color: @color-yellow;
-        }
-        &--green {
-          background-color: @color-green;
-        }
-        &--blue {
-          background-color: @color-blue;
-        }
-        &--darkblue {
-          background-color: @color-darkblue;
-        }
-        &--pink {
-          background-color: @color-pink;
-        }
-        &--purple {
-          background-color: @color-purple;
-        }
-        &--brown {
-          background-color: @color-brown;
-        }
-        &--darkgray {
-          background-color: @color-darkgray;
-        }
+        color: #fff;
+      }
+      &__name {
+        font-size: 14px;
+        padding: 0 4px;
       }
       &__inner {
-        float: left;
+        flex: 1;
+        padding: 12px 7px;
+        align-items: center;
+      }
+      &:not(:last-child) &__inner {
         border-bottom: 1px solid #eee;
       }
-      &:after{
-        content: '';
-        display: table;
-        clear: both;
-        visibility: hidden;
-        width: 0;
-        height: 0;
-      }
+      
     }
   }
 
