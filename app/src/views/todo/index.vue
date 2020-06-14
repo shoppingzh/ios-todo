@@ -1,9 +1,11 @@
 <template>
-  <div class="app" @click.self="handleAddding">
+  <div class="page">
     <page-navbar
-      title="列表"
+      :title="category.name"
+      left-text="列表"
     />
-    <main>
+    <main @click.self="handleAddding">
+      <div v-if="category" class="category-name" :class="'color--' + category.color">{{ category.name }}</div>
       <div
         v-for="todo in todos"
         :key="todo.id"
@@ -11,6 +13,7 @@
         <todo-checkbox
           v-model="todo.done"
           class="todo-item__checkbox"
+          :color="category.color"
         />
         <div class="todo-item__input">
           <input v-model="todo.title" type="text">
@@ -20,12 +23,19 @@
         <todo-checkbox
           v-model="addTodo.done"
           class="todo-item__checkbox"
+          :color="category.color"
         />
         <div class="todo-item__input">
           <input v-model="addTodo.title" ref="addInput" type="text">
         </div>
       </div>
     </main>
+    <footer>
+      <a v-if="!!category" href="javascript:;" @click="adding = true">
+        <i class="icon-jia1" :class="'bg--' + category.color" style="color: #fff; border-radius: 50%; padding: 2px;"></i>
+        <span :class="'color--' + category.color" style="margin-left: 8px;">新提醒事项</span>
+      </a>
+    </footer>
   </div>
 </template>
 
@@ -42,7 +52,6 @@ export default {
   },
   data() {
     this.category = catApi.getById(this.$route.query.category)
-    console.log(this.category)
     return {
       todos: api.listInCategory(this.category.id),
       adding: false,
@@ -87,12 +96,30 @@ export default {
 </script>
 
 <style lang="less" scoped>
-  .app {
+  .page {
+    display: flex;
+    flex-direction: column;
     height: 100%;
+    background-color: #fff;
+    > header {
+
+    }
+    > main {
+      flex: 1;
+      overflow-y: auto;
+      padding: 5px 8px 60px;
+      
+    }
+    > footer {
+      padding: 5px 8px;
+      font-size: 16px;
+      font-weight: 600;
+    }
   }
-  main {
-    margin-top: 40px;
-    padding: 5px 8px;
+  .category-name {
+    font-size: 26px;
+    font-weight: 600;
+    padding: 8px 4px;
   }
   .todo-item {
     display: flex;

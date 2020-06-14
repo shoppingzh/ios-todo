@@ -16,7 +16,7 @@
         </div>
       </div>
       <div class="title_input">
-        <input v-model="currentCategory.name" type="text" placeholder="标题">
+        <input ref="addInput" v-model="currentCategory.name" type="text" placeholder="">
       </div>
       <div class="choosers">
         <div
@@ -63,7 +63,7 @@ export default {
       default: () => {
         return {
           name: '',
-          color: colors[4],
+          color: colors[5],
           icon: icons[0]
         }
       }
@@ -82,6 +82,11 @@ export default {
     }
   },
   methods: {
+    focus() {
+      this.$nextTick(() => {
+        this.$refs.addInput.focus()
+      })
+    },
     handleCancel() {
       this.$emit('cancel')
     },
@@ -163,6 +168,7 @@ export default {
       outline: 0;
       padding: 10px 8px;
       font-size: 16px;
+      text-align: center;
     }
   }
 

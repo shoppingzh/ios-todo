@@ -2,7 +2,7 @@
   <header>
     <div class="left" @click="handleRouteBack">
       <i class="icon-zuo"></i>
-      <span class="left-text">{{ title }}</span>
+      <span class="left-text">{{ leftText }}</span>
     </div>
     <div class="title">
       {{ title }}
@@ -36,11 +36,8 @@ export default {
   header {
     display: flex;
     align-items: center;
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 100%;
     height: 40px;
+    position: relative;
     line-height: 1.5;
     background-color: #fff;
     .left, .right {
@@ -65,7 +62,7 @@ export default {
     .title {
       max-width: 60%;
       margin: 0 auto;
-      font-size: 14px;
+      font-size: 16px;
       font-weight: 600;
       text-align: center;
       overflow: hidden;

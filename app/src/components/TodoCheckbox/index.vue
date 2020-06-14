@@ -69,8 +69,9 @@ export default {
       content: '';
       display: inline-block;
       position: absolute;
-      width: 85%;
-      height: 85%;
+      z-index: 0;
+      width: 75%;
+      height: 75%;
       left: 50%;
       top: 50%;
       border-radius: 50%;

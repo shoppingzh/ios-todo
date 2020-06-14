@@ -10,13 +10,13 @@
 
       <div class="todo-card-list">
         <div class="todo-card-wrap">
-          <todo-card title="今天" color="blue" icon="rili"/>
+          <todo-card title="今天" color="darkblue" icon="rili" count="2"/>
         </div>
         <div class="todo-card-wrap">
-          <todo-card title="计划" color="orange" icon="shijian"/>
+          <todo-card title="计划" color="orange" icon="shijian" count="2"/>
         </div>
         <div class="todo-card-wrap">
-          <todo-card title="全部" color="darkgray" icon="konghezi"/>
+          <todo-card title="全部" color="darkgray" icon="konghezi" count="7"/>
         </div>
         <div class="todo-card-wrap">
           <todo-card title="旗标" color="red" icon="qizhi"/>
@@ -50,8 +50,10 @@
     <md-popup
       v-model="adding"
       has-mask
-      position="bottom">
+      position="bottom"
+      @show="$refs.addCategory.focus()">
       <add-category
+        ref="addCategory"
         @cancel="adding = false"
         @done="handleAddDone"
       />
@@ -99,25 +101,22 @@ export default {
 <style lang="less" scoped>
   @import '@/styles/var.less';
   .page {
+    display: flex;
+    flex-direction: column;
     padding: 12px;
-  }
-  main {
-    margin: 30px 0;
-  }
-  // 顶部/底部栏
-  .top-bar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    padding: 12px;
-    text-align: right;
-  }
-  .foot-bar {
-    position: fixed;
-    bottom: 0;
-    right: 0;
-    padding: 12px;
+    > header {
+      padding: 0 12px;
+      text-align: right;
+    }
+    > main {
+      flex: 1;
+      overflow-y: auto;
+    }
+    > footer {
+      margin-top: 12px;
+      padding: 0 12px;
+      text-align: right;
+    }
   }
   .heading {
     font-size: 18px;
@@ -127,7 +126,7 @@ export default {
   }
   // 搜索
   .search-input {
-    margin: 25px 0;
+    margin: 15px 0;
   }
   // 卡片
   .todo-card-list {
