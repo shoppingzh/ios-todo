@@ -25,20 +25,19 @@
 
       <div class="heading">我的列表</div>
       <div class="category-list">
-        <router-link :to="'/todo'" tag="div">
-          <div
-            v-for="category in categories"
-            :key="category.name"
-            class="category__item"
-            @click="handleCategoryClick">
-            <div class="category__item__icon" :class="'bg--' + category.color">
-              <i :class="'icon-' + category.icon"></i>
-            </div>
-            <div class="category__item__inner">
-              <div class="category__item__name">{{ category.name }}</div>
-              <!-- <div class="category__item__count">0</div>
-              <div class="category__item__route"></div> -->
-            </div>
+        <router-link 
+          v-for="category in categories"
+          :key="category.name"
+          :to="{ path: '/todo', query: { category: category.id } }"
+          tag="div"
+          class="category__item">
+          <div class="category__item__icon" :class="'bg--' + category.color">
+            <i :class="'icon-' + category.icon"></i>
+          </div>
+          <div class="category__item__inner">
+            <div class="category__item__name">{{ category.name }}</div>
+            <!-- <div class="category__item__count">0</div>
+            <div class="category__item__route"></div> -->
           </div>
         </router-link>
       </div>
@@ -89,9 +88,6 @@ export default {
     handleAddCategory() {
       this.adding = true
     },
-    handleCategoryClick() {
-      
-    },
     handleAddDone() {
       this.adding = false
       this.loadAll()
@@ -124,10 +120,10 @@ export default {
     padding: 12px;
   }
   .heading {
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 600;
     margin-bottom: 8px;
-    padding: 5px;
+    padding: 0 5px;
   }
   // 搜索
   .search-input {
@@ -184,7 +180,7 @@ export default {
       }
       &__inner {
         flex: 1;
-        padding: 12px 7px;
+        padding: 14px 7px;
         align-items: center;
       }
       &:not(:last-child) &__inner {

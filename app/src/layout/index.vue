@@ -1,5 +1,7 @@
 <template>
-  <router-view/>
+  <transition>
+    <router-view/>
+  </transition>
   <!-- <keep-alive>
   </keep-alive> -->
 </template>
@@ -10,6 +12,5 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
 </style>
