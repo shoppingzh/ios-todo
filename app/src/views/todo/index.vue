@@ -5,7 +5,7 @@
       left-text="列表"
     >
       <template #right>
-        <div class="more" @click="moreAction = true">
+        <div class="more" @click="showMoreAction = true">
           <i class="icon-gengduo"></i>
         </div>
       </template>
@@ -50,8 +50,9 @@
     </footer>
     <!-- 底部菜单 -->
     <md-action-sheet
-      v-model="moreAction"
-      :options="[{ label: '选项1', value: 1 }]">
+      v-model="showMoreAction"
+      :options="moreActions"
+      @selected="handleMoreAction">
 
     </md-action-sheet>
   </div>
@@ -71,13 +72,25 @@ export default {
   data() {
     this.category = catApi.getById(this.$route.query.category)
     return {
-      todos: api.listInCategory(this.category.id),
+      todos: api.listInCategory(this.category.id, false),
       adding: false,
       addTodo: {
         title: '',
         done: false
       },
-      moreAction: false
+      showAll: false,
+      showMoreAction: false
+    }
+  },
+  computed: {
+    moreActions() {
+      const actions = []
+      if (this.showAll) {
+        actions.push({ label: '隐藏已完成项目', value: 1 })
+      } else {
+        actions.push({ label: '显示已完成项目', value: 2 })
+      }
+      return actions
     }
   },
   watch: {
@@ -101,8 +114,14 @@ export default {
           }
           api.add(addTodo)
           this.todos.push(addTodo)
-
         }
+      }
+    },
+    showAll(newVal) {
+      if (newVal) {
+        this.todos = api.listInCategory(this.category.id)
+      } else {
+        this.todos = api.listInCategory(this.category.id, false)
       }
     }
   },
@@ -112,6 +131,18 @@ export default {
     },
     handleTodoChange(todo) {
       api.update(todo)
+    },
+    handleMoreAction(item) {
+      switch (item.value) {
+        case 1:
+          this.showAll = false
+          break
+        case 2:
+          this.showAll = true
+          break
+        default:
+          break
+      }
     }
   }
 }

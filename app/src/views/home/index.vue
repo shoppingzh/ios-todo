@@ -36,8 +36,8 @@
           </div>
           <div class="category__item__inner">
             <div class="category__item__name">{{ category.name }}</div>
-            <!-- <div class="category__item__count">0</div>
-            <div class="category__item__route"></div> -->
+            <div class="category__item__count">{{ category.todoCount }}</div>
+            <div class="category__item__route"><i class="icon-you"></i></div>
           </div>
         </router-link>
       </div>
@@ -85,7 +85,7 @@ export default {
   },
   methods: {
     loadAll() {
-      this.categories = api.listAll()
+      this.categories = api.listAll(true)
     },
     handleAddCategory() {
       this.adding = true
@@ -174,10 +174,20 @@ export default {
         color: #fff;
       }
       &__name {
+        flex: 1;
         font-size: 14px;
         padding: 0 4px;
       }
+      &__count {
+        color: #333;
+        padding: 0 5px;
+      }
+      &__route {
+        padding: 0 4px;
+        color: #666;
+      }
       &__inner {
+        display: flex;
         flex: 1;
         padding: 14px 7px;
         align-items: center;

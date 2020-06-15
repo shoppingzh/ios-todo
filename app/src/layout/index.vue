@@ -1,9 +1,9 @@
 <template>
-  <transition>
-    <router-view/>
-  </transition>
-  <!-- <keep-alive>
-  </keep-alive> -->
+  <keep-alive>
+    <transition>
+      <router-view/>
+    </transition>
+  </keep-alive>
 </template>
 
 <script>

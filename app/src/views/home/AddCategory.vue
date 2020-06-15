@@ -183,8 +183,8 @@ export default {
       border-radius: 50%;
 
       &__inner {
-        width: 36px;
-        height: 36px;
+        width: 38px;
+        height: 38px;
         border-radius: 50%;
       }
       &--active .chooser__inner{

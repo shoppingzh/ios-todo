@@ -1,9 +1,16 @@
 import db from '@/db'
+import * as todoApi from './todo'
 
 const TABLE_NAME = 'category'
 
-export function listAll() {
-  return db.get(TABLE_NAME).value()
+export function listAll(countTodo) {
+  const list = db.get(TABLE_NAME).value()
+  if (countTodo) {
+    list.forEach((cat) => {
+      cat.todoCount = todoApi.listInCategory(cat.id, false).length
+    })
+  }
+  return list
 }
 
 export function getById(id) {
