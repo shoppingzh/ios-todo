@@ -7,8 +7,16 @@ export function listInCategory(category) {
 }
 
 export function add(todo) {
-  if (todo) {
-    todo.id = +new Date()
-    db.get(TABLE_NAME).push(todo).write()
+  if (!todo) {
+    return
   }
+  todo.id = +new Date()
+  db.get(TABLE_NAME).push(todo).write()
+}
+
+export function update(todo) {
+  if (!todo) {
+    return
+  }
+  db.get(TABLE_NAME).find({ id: todo.id }).assign(todo).write()
 }

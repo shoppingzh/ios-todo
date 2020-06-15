@@ -7,7 +7,9 @@
     <div class="title">
       {{ title }}
     </div>
-    <div class="right"></div>
+    <div class="right">
+      <slot name="right"/>
+    </div>
   </header>
 </template>
 

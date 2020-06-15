@@ -10,13 +10,13 @@
 
       <div class="todo-card-list">
         <div class="todo-card-wrap">
-          <todo-card title="今天" color="darkblue" icon="rili" count="2"/>
+          <todo-card title="今天" color="darkblue" icon="rili" :count="2"/>
         </div>
         <div class="todo-card-wrap">
-          <todo-card title="计划" color="orange" icon="shijian" count="2"/>
+          <todo-card title="计划" color="orange" icon="shijian" :count="2"/>
         </div>
         <div class="todo-card-wrap">
-          <todo-card title="全部" color="darkgray" icon="konghezi" count="7"/>
+          <todo-card title="全部" color="darkgray" icon="konghezi" :count="7"/>
         </div>
         <div class="todo-card-wrap">
           <todo-card title="旗标" color="red" icon="qizhi"/>

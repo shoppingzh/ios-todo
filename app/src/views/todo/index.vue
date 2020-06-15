@@ -3,21 +3,33 @@
     <page-navbar
       :title="category.name"
       left-text="列表"
-    />
+    >
+      <template #right>
+        <div class="more" @click="moreAction = true">
+          <i class="icon-gengduo"></i>
+        </div>
+      </template>
+    </page-navbar>
     <main @click.self="handleAddding">
       <div v-if="category" class="category-name" :class="'color--' + category.color">{{ category.name }}</div>
-      <div
-        v-for="todo in todos"
-        :key="todo.id"
-        class="todo-item">
-        <todo-checkbox
-          v-model="todo.done"
-          class="todo-item__checkbox"
-          :color="category.color"
-        />
-        <div class="todo-item__input">
-          <input v-model="todo.title" type="text">
+      <template v-if="todos && todos.length">
+        <div
+          v-for="todo in todos"
+          :key="todo.id"
+          class="todo-item">
+          <todo-checkbox
+            v-model="todo.done"
+            class="todo-item__checkbox"
+            :color="category.color"
+            @input="handleTodoChange(todo)"
+          />
+          <div class="todo-item__input">
+            <input v-model="todo.title" type="text" @input="handleTodoChange(todo)">
+          </div>
         </div>
+      </template>
+      <div v-else-if="!adding" class="none-tips">
+        没有提醒事项
       </div>
       <div v-if="adding" class="todo-item">
         <todo-checkbox
@@ -36,6 +48,12 @@
         <span :class="'color--' + category.color" style="margin-left: 8px;">新提醒事项</span>
       </a>
     </footer>
+    <!-- 底部菜单 -->
+    <md-action-sheet
+      v-model="moreAction"
+      :options="[{ label: '选项1', value: 1 }]">
+
+    </md-action-sheet>
   </div>
 </template>
 
@@ -58,7 +76,8 @@ export default {
       addTodo: {
         title: '',
         done: false
-      }
+      },
+      moreAction: false
     }
   },
   watch: {
@@ -90,12 +109,16 @@ export default {
   methods: {
     handleAddding() {
       this.adding = !this.adding
+    },
+    handleTodoChange(todo) {
+      api.update(todo)
     }
   }
 }
 </script>
 
 <style lang="less" scoped>
+  @import '@/styles/var.less';
   .page {
     display: flex;
     flex-direction: column;
@@ -115,6 +138,24 @@ export default {
       font-size: 16px;
       font-weight: 600;
     }
+  }
+  .more {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 26px;
+    height: 26px;
+    background-color: #eee;
+    border-radius: 50%;
+    i {
+      font-size: 18px;
+      color: @color-darkblue;
+    }
+  }
+  .none-tips {
+    color: #ccc;
+    text-align: center;
+    margin-top: 50%;
   }
   .category-name {
     font-size: 26px;

@@ -44,8 +44,8 @@ export default {
     border-radius: 8px;
     padding: 8px 12px;
 
-    &--blue:active {
-      background-color: @color-blue;
+    &--darkblue:active {
+      background-color: @color-darkblue;
       color: #fff;
     }
     &--orange:active {
