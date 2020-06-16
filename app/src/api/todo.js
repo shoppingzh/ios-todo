@@ -41,3 +41,11 @@ export function statInCategory() {
 export function setFlag(id, flag = false) {
   return db.get(TABLE_NAME).find({ id: id }).assign({ flag: flag }).write()
 }
+
+/**
+ * 批量查询待办
+ * @param {Object} params 查询条件
+ */
+export function list(params = {}) {
+  return db.get(TABLE_NAME).filter(params).value()
+}

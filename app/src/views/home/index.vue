@@ -9,18 +9,18 @@
       <search-input class="index-search-input" />
 
       <div class="todo-card-list">
-        <div class="todo-card-wrap">
-          <todo-card title="今天" color="darkblue" icon="rili" :count="2"/>
-        </div>
-        <div class="todo-card-wrap">
-          <todo-card title="计划" color="orange" icon="shijian" :count="2"/>
-        </div>
-        <div class="todo-card-wrap">
-          <todo-card title="全部" color="darkgray" icon="konghezi" :count="7"/>
-        </div>
-        <div class="todo-card-wrap">
-          <todo-card title="旗标" color="red" icon="qizhi"/>
-        </div>
+        <router-link :to="{ path: '/todo/date/today' }" tag="div" class="todo-card-wrap">
+          <todo-card title="今天" color="darkblue" icon="rili" :count="counts.today"/>
+        </router-link>
+        <router-link :to="{ path: '/todo/date/plan' }" tag="div" class="todo-card-wrap">
+          <todo-card title="计划" color="orange" icon="shijian" :count="counts.plan"/>
+        </router-link>
+        <router-link :to="{ path: '/todo' }" tag="div" class="todo-card-wrap">
+          <todo-card title="全部" color="darkgray" icon="konghezi" :count="counts.all"/>
+        </router-link>
+        <router-link :to="{ path: '/todo/flag' }" tag="div" class="todo-card-wrap">
+          <todo-card title="旗标" color="red" icon="qizhi" :count="counts.flag"/>
+        </router-link>
       </div>
 
       <div class="heading">我的列表</div>
@@ -28,8 +28,9 @@
         <router-link 
           v-for="category in categories"
           :key="category.name"
-          :to="{ path: '/todo', query: { category: category.id } }"
-          tag="div">
+          :to="{ path: '/todo/category/' + category.id }"
+          tag="div"
+          style="overflow: hidden;">
           <van-swipe-cell>
             <div class="category__item">
               <div class="category__item__icon" :class="'bg--' + category.color">
@@ -82,6 +83,7 @@ import TodoCard from './TodoCard'
 import SearchInput from '@/components/SearchInput'
 import AddCategory from './AddCategory'
 import * as api from '@/api/category'
+import * as todoApi from '@/api/todo'
 
 export default {
   components: {
@@ -91,6 +93,12 @@ export default {
   },
   data() {
     return {
+      counts: {
+        tody: 0,
+        plan: 0,
+        all: 0,
+        flag: 0
+      },
       categories: [],
       adding: false,
       updateCategory: undefined
@@ -100,6 +108,8 @@ export default {
   },
   activated() {
     this.loadAll()
+    this.counts.all = todoApi.list({ done: false }).length
+    this.counts.flag = todoApi.list({ done: false, flag: true }).length
   },
   methods: {
     loadAll() {

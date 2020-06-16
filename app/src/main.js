@@ -4,12 +4,13 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 
-import './styles/index.less'
-
 // plugins
 // import '@/plugins/mand'
 import '@/plugins/vant'
 import '@/plugins/animate.css'
+
+// project
+import './styles/index.less'
 
 Vue.config.productionTip = false
 

@@ -12,51 +12,24 @@
       </template>
     </page-navbar>
     <main v-if="!!category" @click.self="handleAddding">
-      <div v-if="category" class="category-name" :class="'color--' + category.color">{{ category.name }}</div>
+      <div class="category-name" :class="'color--' + category.color">{{ category.name }}</div>
       <template v-if="todos && todos.length">
-        <van-swipe-cell
+        <complex-todo-item
           v-for="todo in todos"
-          :key="todo.id">
-          <div class="todo-item">
-            <todo-checkbox
-              v-model="todo.done"
-              class="todo-item__checkbox"
-              :color="category.color"
-              @input="handleTodoChange(todo)"
-            />
-            <div class="todo-item__inner">
-              <input v-model="todo.title" type="text" class="todo-item__input" @input="handleTodoChange(todo)">
-              <i v-if="todo.flag" class="icon-qizhi todo-item__flag"></i>
-            </div>
-          </div>
-          <template #right>
-            <van-button
-              square
-              type="warning"
-              style="width: 90px; height: 100%;"
-              @click="handleSetFlag(todo, !todo.flag)">{{ todo.flag ? '取消旗标' : '旗标' }}</van-button>
-            <van-button
-              square
-              type="danger"
-              style="width: 90px; height: 100%;"
-              @click="handleRemove(todo)">删除</van-button>
-          </template>
-        </van-swipe-cell>
+          :key="todo.id"
+          :todo="todo"
+          @remove="handleRemove"
+        />
       </template>
       <div v-else-if="!adding" class="none-tips">
         没有提醒事项
       </div>
       <!-- 添加 -->
-      <div v-if="adding" class="todo-item">
-        <todo-checkbox
-          v-model="addTodo.done"
-          class="todo-item__checkbox"
-          :color="category.color"
-        />
-        <div class="todo-item__inner">
-          <input v-model="addTodo.title" ref="addInput" class="todo-item__input" type="text">
-        </div>
-      </div>
+      <todo-item
+        v-if="adding"
+        ref="addTodoItem"
+        :todo="addTodo"
+      />
     </main>
     <footer v-if="!!category">
       <a href="javascript:;" @click="adding = true">
@@ -78,14 +51,16 @@
 
 <script>
 import PageNavbar from '@/components/PageNavbar'
-import TodoCheckbox from '@/components/TodoCheckbox'
+import TodoItem from '@/components/TodoItem'
+import ComplexTodoItem from '@/components/ComplexTodoItem'
 import * as api from '@/api/todo'
 import * as catApi from '@/api/category'
 
 export default {
   components: {
     PageNavbar,
-    TodoCheckbox
+    TodoItem,
+    ComplexTodoItem
   },
   data() {
     return {
@@ -124,7 +99,7 @@ export default {
     adding(newVal) {
       if (newVal) {
         this.$nextTick(() => {
-          this.$refs.addInput.focus()
+          this.$refs.addTodoItem.focus()
         })
         // 恢复
         this.addTodo = {
@@ -154,7 +129,7 @@ export default {
     }
   },
   activated() {
-    this.category = catApi.getById(this.$route.query.category)
+    this.category = catApi.getById(this.$route.params.id)
     if (!this.category) {
       this.$toast('没有该分类！')
       this.$router.back()
@@ -166,10 +141,6 @@ export default {
     // 添加待办
     handleAddding() {
       this.adding = !this.adding
-    },
-    // 修改待办信息
-    handleTodoChange(todo) {
-      api.update(todo)
     },
     // 更多操作
     handleMoreAction(item) {
@@ -185,18 +156,12 @@ export default {
           break
       }
     },
-    // 添加旗标
-    handleSetFlag(todo, flag) {
-      todo.flag = flag
-      api.setFlag(todo.id, flag)
-    },
     // 删除待办
     handleRemove(todo) {
       const index = this.todos.findIndex((o) => {
         return o.id === todo.id
       })
       if (index >= 0) {
-        api.remove(todo.id)
         this.todos.splice(index, 1)
       }
     }
@@ -248,37 +213,7 @@ export default {
     font-weight: 600;
     padding: 8px 4px;
   }
-  .todo-item {
-    display: flex;
-    align-items: center;
-    margin-bottom: 5px;
-
-    &__checkbox {
-      margin-right: 8px;
-    }
-
-    &__inner {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      border-bottom: 1px solid #eee;
-    }
-
-    &__input {
-      display: block;
-      width: 100%;
-      appearance: none;
-      padding: 12px 7px;
-      border: 0;
-      outline: 0;
-      font-size: 16px;
-      color: #333;
-    }
-    &__flag {
-      color: #666;
-      padding: 0 10px;
-    }
-  }
+  
   // 更多操作
   .van-popup {
     padding: 0 5px 8px;
