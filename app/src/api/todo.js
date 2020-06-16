@@ -17,7 +17,8 @@ export function add(todo) {
     return
   }
   todo.id = +new Date()
-  db.get(TABLE_NAME).push(todo).write()
+  const arr = db.get(TABLE_NAME).push(todo).write()
+  return arr[arr.length - 1]
 }
 
 export function update(todo) {
@@ -27,8 +28,16 @@ export function update(todo) {
   db.get(TABLE_NAME).find({ id: todo.id }).assign(todo).write()
 }
 
+export function remove(id) {
+  return db.get(TABLE_NAME).remove({ id: id }).write()
+}
+
 export function statInCategory() {
   return catApi.listAll().map((cat) => {
     return listInCategory(cat.id, false)
   })
+}
+
+export function setFlag(id, flag = false) {
+  return db.get(TABLE_NAME).find({ id: id }).assign({ flag: flag }).write()
 }

@@ -9,6 +9,7 @@
     "dev": "vue-cli-service serve"
   },
   "dependencies": {
+    "animate.css": "^4.1.0",
     "core-js": "^3.6.5",
     "lowdb": "^1.0.0",
     "mand-mobile": "^2.5.11",

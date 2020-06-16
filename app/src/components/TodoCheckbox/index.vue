@@ -62,7 +62,7 @@ export default {
     height: 24px;
     border-radius: 50%;
     position: relative;
-    border: 2px solid #eee;
+    border: 2px solid #ccc;
     overflow: hidden;
 
     &:after{

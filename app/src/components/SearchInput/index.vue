@@ -80,13 +80,14 @@ export default {
       border-radius: 6px;
       padding: 3px;
       overflow: hidden;
+      color: #aaa;
     }
 
     &__input {
       flex: 1;
       display: inline-block;
       appearance: none;
-      padding: 6px;
+      padding: 4px;
       background-color: transparent;
       border: 0;
       outline: 0;

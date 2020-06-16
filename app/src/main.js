@@ -9,6 +9,7 @@ import './styles/index.less'
 // plugins
 // import '@/plugins/mand'
 import '@/plugins/vant'
+import '@/plugins/animate.css'
 
 Vue.config.productionTip = false
 

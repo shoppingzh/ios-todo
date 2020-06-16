@@ -97,12 +97,13 @@ export default {
     }
   },
   mounted() {
+  },
+  activated() {
     this.loadAll()
   },
   methods: {
     loadAll() {
       this.categories = [...api.listAll(true)]
-      console.log(this.categories)
     },
     handleAddCategory() {
       this.updateCategory = undefined

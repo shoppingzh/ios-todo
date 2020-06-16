@@ -81,9 +81,6 @@ export default {
       return this.currentCategory.color && this.currentCategory.icon && this.currentCategory.name.trim()
     }
   },
-  mounted() {
-    console.log(this.category)
-  },
   methods: {
     focus() {
       this.$nextTick(() => {

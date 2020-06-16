@@ -1,6 +1,7 @@
 <template>
   <div class="page">
     <page-navbar
+      v-if="!!category"
       :title="category.name"
       left-text="列表"
     >
@@ -10,40 +11,55 @@
         </div>
       </template>
     </page-navbar>
-    <main @click.self="handleAddding">
+    <main v-if="!!category" @click.self="handleAddding">
       <div v-if="category" class="category-name" :class="'color--' + category.color">{{ category.name }}</div>
       <template v-if="todos && todos.length">
-        <div
+        <van-swipe-cell
           v-for="todo in todos"
-          :key="todo.id"
-          class="todo-item">
-          <todo-checkbox
-            v-model="todo.done"
-            class="todo-item__checkbox"
-            :color="category.color"
-            @input="handleTodoChange(todo)"
-          />
-          <div class="todo-item__input">
-            <input v-model="todo.title" type="text" @input="handleTodoChange(todo)">
+          :key="todo.id">
+          <div class="todo-item">
+            <todo-checkbox
+              v-model="todo.done"
+              class="todo-item__checkbox"
+              :color="category.color"
+              @input="handleTodoChange(todo)"
+            />
+            <div class="todo-item__inner">
+              <input v-model="todo.title" type="text" class="todo-item__input" @input="handleTodoChange(todo)">
+              <i v-if="todo.flag" class="icon-qizhi todo-item__flag"></i>
+            </div>
           </div>
-        </div>
+          <template #right>
+            <van-button
+              square
+              type="warning"
+              style="width: 90px; height: 100%;"
+              @click="handleSetFlag(todo, !todo.flag)">{{ todo.flag ? '取消旗标' : '旗标' }}</van-button>
+            <van-button
+              square
+              type="danger"
+              style="width: 90px; height: 100%;"
+              @click="handleRemove(todo)">删除</van-button>
+          </template>
+        </van-swipe-cell>
       </template>
       <div v-else-if="!adding" class="none-tips">
         没有提醒事项
       </div>
+      <!-- 添加 -->
       <div v-if="adding" class="todo-item">
         <todo-checkbox
           v-model="addTodo.done"
           class="todo-item__checkbox"
           :color="category.color"
         />
-        <div class="todo-item__input">
-          <input v-model="addTodo.title" ref="addInput" type="text">
+        <div class="todo-item__inner">
+          <input v-model="addTodo.title" ref="addInput" class="todo-item__input" type="text">
         </div>
       </div>
     </main>
-    <footer>
-      <a v-if="!!category" href="javascript:;" @click="adding = true">
+    <footer v-if="!!category">
+      <a href="javascript:;" @click="adding = true">
         <i class="icon-jia1" :class="'bg--' + category.color" style="color: #fff; border-radius: 50%; padding: 2px;"></i>
         <span :class="'color--' + category.color" style="margin-left: 8px;">新提醒事项</span>
       </a>
@@ -72,13 +88,14 @@ export default {
     TodoCheckbox
   },
   data() {
-    this.category = catApi.getById(this.$route.query.category)
     return {
-      todos: api.listInCategory(this.category.id, false),
+      category: null,
+      todos: [],
       adding: false,
       addTodo: {
         title: '',
-        done: false
+        done: false,
+        flag: false
       },
       showAll: false,
       showMoreAction: false
@@ -112,7 +129,8 @@ export default {
         // 恢复
         this.addTodo = {
           title: '',
-          done: false
+          done: false,
+          flag: false
         }
       } else {
         const todo = this.addTodo
@@ -120,10 +138,10 @@ export default {
           const addTodo = {
             category: this.category.id,
             title: todo.title,
-            done: todo.done
+            done: todo.done,
+            flag: todo.flag
           }
-          api.add(addTodo)
-          this.todos.push(addTodo)
+          this.todos.push(api.add(addTodo))
         }
       }
     },
@@ -135,13 +153,25 @@ export default {
       }
     }
   },
+  activated() {
+    this.category = catApi.getById(this.$route.query.category)
+    if (!this.category) {
+      this.$toast('没有该分类！')
+      this.$router.back()
+      return
+    }
+    this.todos = api.listInCategory(this.category.id, false)
+  },
   methods: {
+    // 添加待办
     handleAddding() {
       this.adding = !this.adding
     },
+    // 修改待办信息
     handleTodoChange(todo) {
       api.update(todo)
     },
+    // 更多操作
     handleMoreAction(item) {
       switch (item.value) {
         case 1:
@@ -153,6 +183,21 @@ export default {
         default:
           this.$toast('暂不支持')
           break
+      }
+    },
+    // 添加旗标
+    handleSetFlag(todo, flag) {
+      todo.flag = flag
+      api.setFlag(todo.id, flag)
+    },
+    // 删除待办
+    handleRemove(todo) {
+      const index = this.todos.findIndex((o) => {
+        return o.id === todo.id
+      })
+      if (index >= 0) {
+        api.remove(todo.id)
+        this.todos.splice(index, 1)
       }
     }
   }
@@ -175,7 +220,7 @@ export default {
       
     }
     > footer {
-      padding: 5px 8px;
+      padding: 8px 12px;
       font-size: 16px;
       font-weight: 600;
     }
@@ -184,12 +229,12 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 26px;
-    height: 26px;
+    width: 28px;
+    height: 28px;
     background-color: #eee;
     border-radius: 50%;
     i {
-      font-size: 18px;
+      font-size: 20px;
       color: @color-darkblue;
     }
   }
@@ -199,7 +244,7 @@ export default {
     margin-top: 50%;
   }
   .category-name {
-    font-size: 26px;
+    font-size: 30px;
     font-weight: 600;
     padding: 8px 4px;
   }
@@ -212,19 +257,26 @@ export default {
       margin-right: 8px;
     }
 
-    &__input {
+    &__inner {
       flex: 1;
+      display: flex;
+      align-items: center;
       border-bottom: 1px solid #eee;
-      input {
-        display: block;
-        width: 100%;
-        appearance: none;
-        padding: 12px 7px;
-        border: 0;
-        outline: 0;
-        font-size: 16px;
-        color: #333;
-      }
+    }
+
+    &__input {
+      display: block;
+      width: 100%;
+      appearance: none;
+      padding: 12px 7px;
+      border: 0;
+      outline: 0;
+      font-size: 16px;
+      color: #333;
+    }
+    &__flag {
+      color: #666;
+      padding: 0 10px;
     }
   }
   // 更多操作

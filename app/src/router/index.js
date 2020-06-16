@@ -10,7 +10,10 @@ const routes = [{
   redirect: '',
   children: [{
     path: '',
-    component: () => import('@/views/home/index')
+    component: () => import('@/views/home/index'),
+    meta: {
+      index: 0
+    }
   }]
 }, {
   path: '/todo',
@@ -18,7 +21,10 @@ const routes = [{
   redirect: '',
   children: [{
     path: '',
-    component: () => import('@/views/todo/index')
+    component: () => import('@/views/todo/index'),
+    meta: {
+      index: 1
+    }
   }]
 }];
 
