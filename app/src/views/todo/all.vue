@@ -1,5 +1,5 @@
 <template>
-  <div class="page">
+  <div>
     <page-navbar
       left-text="列表"
       title="全部"
@@ -16,6 +16,7 @@
             v-for="todo in category.todos"
             :key="todo.id"
             :todo="todo"
+            @remove="handleRemove(category, todo)"
           />  
         </div>
       </div>
@@ -46,6 +47,16 @@ export default {
     this.categories.forEach((cat) => {
       cat.todos = todoApi.listInCategory(cat.id, false)
     })
+  },
+  methods: {
+    handleRemove(category, todo) {
+      const index = category.todos.findIndex((o) => {
+        return o.id === todo.id
+      })
+      if (index >= 0) {
+        category.todos.splice(index, 1)
+      }
+    }
   }
 }
 </script>

@@ -203,11 +203,6 @@ export default {
       color: @color-darkblue;
     }
   }
-  .none-tips {
-    color: #ccc;
-    text-align: center;
-    margin-top: 50%;
-  }
   .category-name {
     font-size: 30px;
     font-weight: 600;

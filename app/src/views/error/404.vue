@@ -1,6 +1,9 @@
 <template>
   <div>
-    <page-navbar/>
+    <page-navbar />
+    <main>
+      <div class="none-tips">敬请期待</div>
+    </main>
   </div>
 </template>
 

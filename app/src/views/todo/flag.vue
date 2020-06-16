@@ -6,11 +6,16 @@
     />
     <main>
       <div class="big-title color--red">旗标</div>
-      <complex-todo-item
-        v-for="todo in todos"
-        :key="todo.id"
-        :todo="todo"
-      />  
+      <div v-if="todos && todos.length">
+        <complex-todo-item
+          v-for="todo in todos"
+          :key="todo.id"
+          :todo="todo"
+        />
+      </div>
+      <div v-else class="none-tips">
+        没有提醒事项
+      </div>
     </main>
 
   </div>

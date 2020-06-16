@@ -46,7 +46,8 @@
               <van-button 
                 square
                 type="primary"
-                style="height:100%;font-size: 20px;"
+                class="bg--darkgray"
+                style="height:100%;font-size: 20px;border-color: transparent;"
                 @click="handleUpdateCategory(category)"><i class="icon-xinxi"></i></van-button>
               <van-button
                 square
