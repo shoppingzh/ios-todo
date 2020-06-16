@@ -6,7 +6,7 @@
     </header>
 
     <main>
-      <search-input />
+      <search-input class="index-search-input" />
 
       <div class="todo-card-list">
         <div class="todo-card-wrap">
@@ -29,16 +29,31 @@
           v-for="category in categories"
           :key="category.name"
           :to="{ path: '/todo', query: { category: category.id } }"
-          tag="div"
-          class="category__item">
-          <div class="category__item__icon" :class="'bg--' + category.color">
-            <i :class="'icon-' + category.icon"></i>
-          </div>
-          <div class="category__item__inner">
-            <div class="category__item__name">{{ category.name }}</div>
-            <div class="category__item__count">{{ category.todoCount }}</div>
-            <div class="category__item__route"><i class="icon-you"></i></div>
-          </div>
+          tag="div">
+          <van-swipe-cell>
+            <div class="category__item">
+              <div class="category__item__icon" :class="'bg--' + category.color">
+                <i :class="'icon-' + category.icon"></i>
+              </div>
+              <div class="category__item__inner">
+                <div class="category__item__name">{{ category.name }}</div>
+                <div class="category__item__count">{{ category.todoCount }}</div>
+                <div class="category__item__route"><i class="icon-you"></i></div>
+              </div>
+            </div>
+            <template #right>
+              <van-button 
+                square
+                type="primary"
+                style="height:100%;font-size: 20px;"
+                @click="handleUpdateCategory(category)"><i class="icon-xinxi"></i></van-button>
+              <van-button
+                square
+                type="danger"
+                style="height:100%;font-size: 20px;"
+                @click="handleRemoveCategory(category)"><i class="icon-lajitong"></i></van-button>
+            </template>
+          </van-swipe-cell>
         </router-link>
       </div>
     </main>
@@ -47,17 +62,17 @@
       <a href="javascript:;" @click="handleAddCategory">添加列表</a>
     </footer>
 
-    <md-popup
+    <van-popup
       v-model="adding"
-      has-mask
       position="bottom"
-      @show="$refs.addCategory.focus()">
+      round>
       <add-category
         ref="addCategory"
+        :category="updateCategory"
         @cancel="adding = false"
         @done="handleAddDone"
       />
-    </md-popup>
+    </van-popup>
 
   </div>
 </template>
@@ -77,7 +92,8 @@ export default {
   data() {
     return {
       categories: [],
-      adding: false
+      adding: false,
+      updateCategory: undefined
     }
   },
   mounted() {
@@ -85,10 +101,25 @@ export default {
   },
   methods: {
     loadAll() {
-      this.categories = api.listAll(true)
+      this.categories = [...api.listAll(true)]
+      console.log(this.categories)
     },
     handleAddCategory() {
+      this.updateCategory = undefined
       this.adding = true
+    },
+    handleUpdateCategory(category) {
+      this.updateCategory = category
+      this.adding = true
+    },
+    handleRemoveCategory(category) {
+      api.remove(category.id)
+      const index = this.categories.findIndex((o) => {
+        return o.id === category.id
+      })
+      if (index >= 0) {
+        this.categories.splice(index, 1)
+      }
     },
     handleAddDone() {
       this.adding = false
@@ -125,7 +156,7 @@ export default {
     padding: 0 5px;
   }
   // 搜索
-  .search-input {
+  .index-search-input {
     margin: 15px 0;
   }
   // 卡片
@@ -150,12 +181,13 @@ export default {
   .category-list {
     background-color: #fff;
     border-radius: 10px;
+    overflow: hidden;
   }
   .category {
     &__item {
       display: flex;
       align-items: center;
-      padding: 8px;
+      padding: 0 8px;
 
       &:active {
         background-color: #eee;
@@ -189,7 +221,7 @@ export default {
       &__inner {
         display: flex;
         flex: 1;
-        padding: 14px 7px;
+        padding: 18px 7px;
         align-items: center;
       }
       &:not(:last-child) &__inner {

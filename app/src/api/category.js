@@ -28,6 +28,14 @@ export function add(category) {
     //
   } else {
     category.id = +new Date()
-    db.get(TABLE_NAME).push(category).write()
+    return db.get(TABLE_NAME).push(category).write()
   }
+}
+
+export function update(id, category) {
+  return db.get(TABLE_NAME).find({ id: id }).assign(category).write()
+}
+
+export function remove(id) {
+  return db.get(TABLE_NAME).remove({ id: id }).write()
 }

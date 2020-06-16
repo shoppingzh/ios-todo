@@ -81,6 +81,9 @@ export default {
       return this.currentCategory.color && this.currentCategory.icon && this.currentCategory.name.trim()
     }
   },
+  mounted() {
+    console.log(this.category)
+  },
   methods: {
     focus() {
       this.$nextTick(() => {
@@ -92,11 +95,16 @@ export default {
     },
     handleDone() {
       const category = Object.create(this.currentCategory)
-      api.add({
+      const cat = {
         name: category.name,
         icon: category.icon,
         color: category.color
-      })
+      }
+      if (category.id) {
+        api.update(category.id, cat)
+      } else {
+        api.add(cat)
+      }
       this.$emit('done', category)
       this.currentCategory = this.category
     }
@@ -106,9 +114,7 @@ export default {
 
 <style lang="less" scoped>
   .app {
-    background-color: #fff;
     padding: 8px;
-    border-radius: 10px 10px 0 0;
     overflow-y: auto;
   }
 

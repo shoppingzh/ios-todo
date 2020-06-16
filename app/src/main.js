@@ -7,7 +7,8 @@ import store from './store'
 import './styles/index.less'
 
 // plugins
-import '@/plugins/mand'
+// import '@/plugins/mand'
+import '@/plugins/vant'
 
 Vue.config.productionTip = false
 

@@ -49,12 +49,14 @@
       </a>
     </footer>
     <!-- 底部菜单 -->
-    <md-action-sheet
+    <van-action-sheet
       v-model="showMoreAction"
-      :options="moreActions"
-      @selected="handleMoreAction">
-
-    </md-action-sheet>
+      :actions="moreActions"
+      @select="handleMoreAction"
+      close-on-click-action
+      cancel-text="取消"
+      :round="false">
+    </van-action-sheet>
   </div>
 </template>
 
@@ -84,11 +86,19 @@ export default {
   },
   computed: {
     moreActions() {
-      const actions = []
+      const actions = [{
+        name: '名称与外观', value: -1
+      }, {
+        name: '添加用户', value: -2
+      }, {
+        name: '删除列表', value: -3
+      }, {
+        name: '选择提醒事项', value: -4
+      }]
       if (this.showAll) {
-        actions.push({ label: '隐藏已完成项目', value: 1 })
+        actions.push({ name: '隐藏已完成项目', value: 1 })
       } else {
-        actions.push({ label: '显示已完成项目', value: 2 })
+        actions.push({ name: '显示已完成项目', value: 2 })
       }
       return actions
     }
@@ -141,6 +151,7 @@ export default {
           this.showAll = true
           break
         default:
+          this.$toast('暂不支持')
           break
       }
     }
@@ -156,7 +167,6 @@ export default {
     height: 100%;
     background-color: #fff;
     > header {
-
     }
     > main {
       flex: 1;
@@ -215,6 +225,30 @@ export default {
         font-size: 16px;
         color: #333;
       }
+    }
+  }
+  // 更多操作
+  .van-popup {
+    padding: 0 5px 8px;
+    background-color: transparent;
+    .van-action-sheet__item {
+      color: @color-darkblue;
+      border-bottom: 1px solid #eee;
+    }
+    :nth-child(1) {
+      border-radius: 8px 8px 0 0;
+    }
+    :nth-last-child(3) {
+      border-radius: 0 0 8px 8px;
+    }
+    
+    .van-action-sheet__gap {
+      background-color: transparent;
+    }
+    .van-action-sheet__cancel {
+      border-radius: 8px;
+      color: @color-darkblue;
+      font-weight: 600;
     }
   }
 </style>
