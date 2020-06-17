@@ -215,7 +215,8 @@ export default {
     background-color: transparent;
     .van-action-sheet__item {
       color: @color-darkblue;
-      border-bottom: 1px solid #eee;
+      background-color: #f3f4f7;
+      margin-bottom: 1px;
     }
     :nth-child(1) {
       border-radius: 8px 8px 0 0;
@@ -229,6 +230,7 @@ export default {
     }
     .van-action-sheet__cancel {
       border-radius: 8px;
+      background-color: #fff;
       color: @color-darkblue;
       font-weight: 600;
     }

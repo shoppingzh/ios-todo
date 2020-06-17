@@ -1,73 +1,80 @@
 <template>
-  <div class="page">
+  <div style="height: 100%;">
 
-    <header class="top-bar">
-      <a href="javascript:;">编辑</a>
-    </header>
+    <div class="page">
 
-    <main>
-      <search-input class="index-search-input" />
+      <header class="top-bar">
+        <a href="javascript:;">编辑</a>
+      </header>
 
-      <div class="todo-card-list">
-        <router-link :to="{ path: '/todo/date/today' }" tag="div" class="todo-card-wrap">
-          <todo-card title="今天" color="darkblue" icon="rili" :count="counts.today"/>
-        </router-link>
-        <router-link :to="{ path: '/todo/date/plan' }" tag="div" class="todo-card-wrap">
-          <todo-card title="计划" color="orange" icon="shijian" :count="counts.plan"/>
-        </router-link>
-        <router-link :to="{ path: '/todo' }" tag="div" class="todo-card-wrap">
-          <todo-card title="全部" color="darkgray" icon="konghezi" :count="counts.all"/>
-        </router-link>
-        <router-link :to="{ path: '/todo/flag' }" tag="div" class="todo-card-wrap">
-          <todo-card title="旗标" color="red" icon="qizhi" :count="counts.flag"/>
-        </router-link>
-      </div>
+      <main>
+        <search-input class="index-search-input" />
 
-      <div class="heading">我的列表</div>
-      <div class="category-list">
-        <router-link 
-          v-for="category in categories"
-          :key="category.name"
-          :to="{ path: '/todo/category/' + category.id }"
-          tag="div"
-          style="overflow: hidden;">
-          <van-swipe-cell>
-            <div class="category__item">
-              <div class="category__item__icon" :class="'bg--' + category.color">
-                <i :class="'icon-' + category.icon"></i>
+        <div class="todo-card-list">
+          <router-link :to="{ path: '/todo/date/today' }" tag="div" class="todo-card-wrap">
+            <todo-card title="今天" color="darkblue" icon="rili" :count="counts.today"/>
+          </router-link>
+          <router-link :to="{ path: '/todo/date/plan' }" tag="div" class="todo-card-wrap">
+            <todo-card title="计划" color="orange" icon="shijian" :count="counts.plan"/>
+          </router-link>
+          <router-link :to="{ path: '/todo' }" tag="div" class="todo-card-wrap">
+            <todo-card title="全部" color="darkgray" icon="konghezi" :count="counts.all"/>
+          </router-link>
+          <router-link :to="{ path: '/todo/flag' }" tag="div" class="todo-card-wrap">
+            <todo-card title="旗标" color="red" icon="qizhi" :count="counts.flag"/>
+          </router-link>
+        </div>
+
+        <div class="heading">我的列表</div>
+        <div class="category-list">
+          <router-link 
+            v-for="category in categories"
+            :key="category.name"
+            :to="{ path: '/todo/category/' + category.id }"
+            tag="div"
+            style="overflow: hidden;">
+            <van-swipe-cell>
+              <div class="category__item">
+                <div class="category__item__icon" :class="'bg--' + category.color">
+                  <i :class="'icon-' + category.icon"></i>
+                </div>
+                <div class="category__item__inner">
+                  <div class="category__item__name">{{ category.name }}</div>
+                  <div class="category__item__count">{{ category.todoCount }}</div>
+                  <div class="category__item__route"><i class="icon-you"></i></div>
+                </div>
               </div>
-              <div class="category__item__inner">
-                <div class="category__item__name">{{ category.name }}</div>
-                <div class="category__item__count">{{ category.todoCount }}</div>
-                <div class="category__item__route"><i class="icon-you"></i></div>
-              </div>
-            </div>
-            <template #right>
-              <van-button 
-                square
-                type="primary"
-                class="bg--darkgray"
-                style="height:100%;font-size: 20px;border-color: transparent;"
-                @click="handleUpdateCategory(category)"><i class="icon-xinxi"></i></van-button>
-              <van-button
-                square
-                type="danger"
-                style="height:100%;font-size: 20px;"
-                @click="handleRemoveCategory(category)"><i class="icon-lajitong"></i></van-button>
-            </template>
-          </van-swipe-cell>
-        </router-link>
-      </div>
-    </main>
+              <template #right>
+                <van-button 
+                  square
+                  type="primary"
+                  class="bg--darkgray"
+                  style="height:100%;font-size: 20px;border-color: transparent;"
+                  @click="handleUpdateCategory(category)"><i class="icon-xinxi"></i></van-button>
+                <van-button
+                  square
+                  type="danger"
+                  style="height:100%;font-size: 20px;"
+                  @click="handleRemoveCategory(category)"><i class="icon-lajitong"></i></van-button>
+              </template>
+            </van-swipe-cell>
+          </router-link>
+        </div>
+      </main>
 
-    <footer class="foot-bar">
-      <a href="javascript:;" @click="handleAddCategory">添加列表</a>
-    </footer>
+      <footer class="foot-bar">
+        <a href="javascript:;" @click="handleAddCategory">添加列表</a>
+      </footer>
+    </div>
+
 
     <van-popup
       v-model="adding"
       position="bottom"
-      round>
+      round
+      overlay-class="add-overlay"
+      @open="handleStartAdd"
+      @close="handleEndAdd">
       <add-category
         ref="addCategory"
         :category="updateCategory"
@@ -136,6 +143,12 @@ export default {
     handleAddDone() {
       this.adding = false
       this.loadAll()
+    },
+    handleStartAdd() {
+      this.$el.querySelector('.page').classList.add('page--back')
+    },
+    handleEndAdd() {
+      this.$el.querySelector('.page').classList.remove('page--back')
     }
   }
 }
@@ -147,6 +160,12 @@ export default {
     display: flex;
     flex-direction: column;
     padding: 12px;
+    transition: all .3s;
+    overflow: hidden;
+    &--back {
+      border-radius: 15px;
+      transform: scale(.95);
+    }
     > header {
       padding: 0 12px;
       text-align: right;
@@ -216,6 +235,7 @@ export default {
         padding: 5px;
         border-radius: 50%;
         color: #fff;
+        font-size: 20px;
       }
       &__name {
         flex: 1;
@@ -243,6 +263,9 @@ export default {
     }
   }
 
+  .add-overlay {
+    background-color: rgba(220, 220, 220, 1);
+  }
 
 
 </style>

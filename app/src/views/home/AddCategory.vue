@@ -11,7 +11,7 @@
     </header>
     <main>
       <div class="view-box">
-        <div class="view-box__icon" :class="'bg--' + currentCategory.color">
+        <div class="view-box__icon" :class="'bg--' + currentCategory.color + '--linear'">
           <i :class="'icon-' + currentCategory.icon"></i>
         </div>
       </div>
@@ -151,7 +151,7 @@ export default {
       margin: auto;
       border-radius: 50%;
       color: #fff;
-      font-size: 50px;
+      font-size: 54px;
       transition: background .3s;
     }
   }
