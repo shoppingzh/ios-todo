@@ -48,7 +48,7 @@
 </template>
 
 <script>
-const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'darkblue', 'purple', 'pink', 'brown', 'darkgray']
+const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'darkblue', 'purple']
 const icons = ['list', 'tag', 'liwu', 'dangao', 'xuewei', 'shubao', 'wenju', 'kabao', 'xinyongka', 'qian', 'yaling', 
 'yundong', 'canyin', 'jiubei', 'yao', 'tingzhenqi', 'yizi', 'jia', 'diannao', 'yinyue', 'youxi', 'huanbao', 
 'huluobo', 'zhuazi', 'zuqiu', 'wangqiu', 'feiji', 'fanchuan']

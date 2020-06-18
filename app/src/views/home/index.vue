@@ -132,13 +132,18 @@ export default {
       this.adding = true
     },
     handleRemoveCategory(category) {
-      api.remove(category.id)
-      const index = this.categories.findIndex((o) => {
-        return o.id === category.id
-      })
-      if (index >= 0) {
-        this.categories.splice(index, 1)
-      }
+      this.$dialog.confirm({
+        title: `删除“${category.name}”`,
+        message: '这将删除此列表中的所有提醒事项。'
+      }).then(() => {
+        api.remove(category.id)
+        const index = this.categories.findIndex((o) => {
+          return o.id === category.id
+        })
+        if (index >= 0) {
+          this.categories.splice(index, 1)
+        }
+      }).catch(() => {})
     },
     handleAddDone() {
       this.adding = false

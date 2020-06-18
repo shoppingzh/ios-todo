@@ -21,15 +21,8 @@ export function add(category) {
   if (!category) {
     return
   }
-  const exist = db.get(TABLE_NAME).find({
-    name: category.name
-  }).value()
-  if (exist) {
-    //
-  } else {
-    category.id = +new Date()
-    return db.get(TABLE_NAME).push(category).write()
-  }
+  category.id = +new Date()
+  return db.get(TABLE_NAME).push(category).write()
 }
 
 export function update(id, category) {
@@ -37,5 +30,7 @@ export function update(id, category) {
 }
 
 export function remove(id) {
-  return db.get(TABLE_NAME).remove({ id: id }).write()
+  const result = db.get(TABLE_NAME).remove({ id: id }).write()
+  todoApi.removeInCategory(id)
+  return result
 }

@@ -32,6 +32,10 @@ export function remove(id) {
   return db.get(TABLE_NAME).remove({ id: id }).write()
 }
 
+export function removeInCategory(categoryId) {
+  return db.get(TABLE_NAME).remove({ category: categoryId }).write()
+}
+
 export function statInCategory() {
   return catApi.listAll().map((cat) => {
     return listInCategory(cat.id, false)

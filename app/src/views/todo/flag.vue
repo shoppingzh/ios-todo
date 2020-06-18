@@ -11,6 +11,7 @@
           v-for="todo in todos"
           :key="todo.id"
           :todo="todo"
+          @remove="handleRemove(todo)"
         />
       </div>
       <div v-else class="none-tips">
@@ -38,6 +39,16 @@ export default {
   },
   activated() {
     this.todos = todoApi.list({ done: false, flag: true })
+  },
+  methods: {
+    handleRemove(todo) {
+      const index = this.todos.findIndex((o) => {
+        return o.id === todo.id
+      })
+      if (index >= 0) {
+        this.todos.splice(index, 1)
+      }
+    }
   }
 }
 </script>
