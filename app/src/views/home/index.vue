@@ -124,12 +124,12 @@ export default {
       this.categories = [...api.listAll(true)]
     },
     handleAddCategory() {
-      this.updateCategory = undefined
       this.adding = true
+      this.updateCategory = undefined
     },
     handleUpdateCategory(category) {
-      this.updateCategory = category
       this.adding = true
+      this.updateCategory = category
     },
     handleRemoveCategory(category) {
       this.$dialog.confirm({
@@ -147,6 +147,7 @@ export default {
     },
     handleAddDone() {
       this.adding = false
+      this.updateCategory = null
       this.loadAll()
     },
     handleStartAdd() {

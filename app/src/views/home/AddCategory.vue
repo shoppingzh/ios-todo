@@ -81,6 +81,11 @@ export default {
       return this.currentCategory.color && this.currentCategory.icon && this.currentCategory.name.trim()
     }
   },
+  watch: {
+    category(newVal) {
+      this.currentCategory = Object.create(newVal)
+    }
+  },
   methods: {
     focus() {
       this.$nextTick(() => {
