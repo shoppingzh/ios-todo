@@ -116,12 +116,15 @@ export default {
   },
   activated() {
     this.loadAll()
-    this.counts.all = todoApi.list({ done: false }).length
-    this.counts.flag = todoApi.list({ done: false, flag: true }).length
+    this.loadStat()
   },
   methods: {
     loadAll() {
       this.categories = [...api.listAll(true)]
+    },
+    loadStat() {
+      this.counts.all = todoApi.list({ done: false }).length
+      this.counts.flag = todoApi.list({ done: false, flag: true }).length
     },
     handleAddCategory() {
       this.adding = true
@@ -143,6 +146,7 @@ export default {
         if (index >= 0) {
           this.categories.splice(index, 1)
         }
+        this.loadStat()
       }).catch(() => {})
     },
     handleAddDone() {
